@@ -1,0 +1,5 @@
+rootProject.name = "MyHome"
+include ':app'
+include ':device'
+include ':setting'
+include ':lib-base'
