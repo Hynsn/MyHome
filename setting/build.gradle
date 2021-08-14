@@ -1,29 +1,16 @@
-/*if (isRunModule.toBoolean()) {
-    plugins {
-        id 'com.android.application'
-        id 'kotlin-android'
-    }
-}else {
-    plugins {
-        id 'com.android.library'
-        id 'kotlin-android'
-    }
-}*/
-if (isRunModule.toBoolean()) {
-    apply plugin: 'com.android.application'
-}else {
-    apply plugin: 'com.android.library'
-}
+apply plugin: rootProject.ext.module_type
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "25.0.2"
+    buildToolsVersion rootProject.ext.droid["buildTools"]
 
     defaultConfig {
-        applicationId "com.hynson.setting"
+        if (isRunModule.toBoolean()) {
+            applicationId "com.hynson.setting"
+        }
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -44,6 +31,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    sourceSets {
+        main {
+            def mani = isRunModule.toBoolean() ? "/" : "/manifest/"
+            manifest.srcFile "src/main${mani}AndroidManifest.xml"
+        }
     }
 }
 

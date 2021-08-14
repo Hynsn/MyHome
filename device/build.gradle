@@ -1,17 +1,16 @@
-apply plugin: "com.android.${isRunModule.toBoolean() ? "application": "library"}"
-
+apply plugin: rootProject.ext.module_type
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
-    //buildToolsVersion "25.0.2"
+    buildToolsVersion rootProject.ext.droid["buildTools"]
 
     defaultConfig {
-        /*if (isRunModule.toBoolean()) {
+        if (isRunModule.toBoolean()) {
             applicationId "com.hynson.device"
-        }*/
+        }
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -32,6 +31,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    sourceSets {
+        main {
+            def mani = isRunModule.toBoolean() ? "/" : "/manifest/"
+            manifest.srcFile "src/main${mani}AndroidManifest.xml"
+        }
     }
 }
 
