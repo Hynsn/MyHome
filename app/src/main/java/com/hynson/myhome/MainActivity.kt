@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import com.hynson.navi.ActivityDestination
+import com.hynson.navi.FragmentDestination
 
+@ActivityDestination(pageUrl = "ABCDEa123abc", asStarter = true)
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,9 +19,6 @@ class MainActivity : AppCompatActivity() {
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this,navController)
 
-        navController.graph.forEach {
-            Log.i(TAG, "onCreate: ${it}")
-        }
     }
     companion object {
         const val TAG = "MainActivity"

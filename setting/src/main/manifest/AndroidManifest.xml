@@ -2,6 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hynson.setting">
     <application>
-    <activity android:name=".SettingActivity"/>
+        <activity android:name=".SettingActivity"/>
     </application>
 </manifest>

@@ -8,3 +8,28 @@ gradle.properties增加isRunModule = true。
 2. 主工程配置路由图
 写跳转到组件Activity业务代码
    
+
+基于Navigation开发自己的路由框架技术难点及思路记录
+1.如何使用注解处理器自动生成graph路由文件？
+路由文件格式，需要参考navigation graph，且要精简不是很重要的参数不生成了。
+fragment id使用path="/setting/login"生成对应的hash值是否可以当做resId使用。经过测试验证，StringHashcode不能减少冲突，会采用hashmap存储(path,resId)
+    
+    <?xml version="1.0" encoding="utf-8"?>
+    <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/blankFragment">
+    <fragment
+    android:id="@+id/blankFragment"
+    android:name="com.hynson.setting.BlankFragment" />
+    </navigation>
+
+2.注解处理器生成的xml存放在那个位置方便打包编译
+3.需要实现注解器的业务
+activity类配置为graph group -> 对应路由文件，只允许有一个主要的，如果不是主要的需要配置为
+activity节点
+
+fragment类配置为destination -> fragment节点
+4.注解处理器能在navigation目录下自动生成xml文件？
+生成的xml文件id、xml节点内部的resid会不会和主工程资源Id冲突
+xml很不灵活。

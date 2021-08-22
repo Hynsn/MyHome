@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="key">
+        <item>tag1</item>
+        <item>tag2</item>
+        <item>tag3</item>
+    </string-array>
+    <integer-array name="ids">
+        <item>1</item>
+        <item>2</item>
+        <item>1</item>
+        <item>1</item>
+
+    </integer-array>
+</resources>
