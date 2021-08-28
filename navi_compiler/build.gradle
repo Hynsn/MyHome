@@ -8,7 +8,6 @@ java {
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.alibaba:fastjson:1.2.69'
     implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation project(path: ':navi_annotation')

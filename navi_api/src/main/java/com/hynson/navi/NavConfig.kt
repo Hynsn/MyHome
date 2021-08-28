@@ -1,5 +1,6 @@
-package com.hynson.base
+package com.hynson.navi
 
+import android.util.Log
 import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -19,7 +20,8 @@ class NavConfig {
                 val jsons = parseNavFile()
                 for (json in jsons){
                     val destination: HashMap<String, Destination> = GsonUtil.fromJson(json,
-                        object : TypeToken<HashMap<String, Destination>>(){}.type)
+                        object : TypeToken<HashMap<String, Destination>>() {}.type
+                    )
                     sDestinationMap.putAll(destination)
                 }
             }
@@ -30,6 +32,7 @@ class NavConfig {
          * 解析assets中特定文件
          */
         private fun parseFile(s: String): String {
+            Log.i("TAG", "parseFile: ${Thread.currentThread()}")
             val assets = AppUtil.getApp().resources.assets
             val open = assets.open(s)
             val stringBuilder = StringBuilder()

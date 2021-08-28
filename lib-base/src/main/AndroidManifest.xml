@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hynson.base">
     <application>
-        <activity android:name=".EmptyActivity"
+        <activity android:name="com.hynson.navi.EmptyActivity"
             android:theme="@android:style/Theme.Translucent" />
     </application>
 </manifest>

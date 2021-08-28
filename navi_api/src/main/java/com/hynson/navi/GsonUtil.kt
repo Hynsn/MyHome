@@ -1,4 +1,4 @@
-package com.hynson.base
+package com.hynson.navi
 
 import com.google.gson.GsonBuilder
 import java.lang.reflect.Type
@@ -15,7 +15,7 @@ class GsonUtil {
             return GSON.fromJson(json, type)
         }
         fun toJson(`object`: Any?, includeNulls: Boolean): String? {
-            return if (includeNulls)GSON.toJson(`object`) else GSON_NO_NULLS.toJson(
+            return if (includeNulls) GSON.toJson(`object`) else GSON_NO_NULLS.toJson(
                 `object`
             )
         }

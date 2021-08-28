@@ -1,7 +1,5 @@
 package com.hynson.navi;
 
-//import com.alibaba.fastjson.JSON;
-//import com.alibaba.fastjson.JSONObject;
 import com.google.auto.service.AutoService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -88,12 +86,14 @@ public class NavProcessor extends AbstractProcessor {
             try {
                 //filer.createResource方法用来生成源文件
                 //StandardLocation.CLASS_OUTPUT java文件生成class文件的位置，/build/intermediates/javac/debug/classes/目录下
-                FileObject resource = filer.createResource(StandardLocation.CLASS_OUTPUT, "", outFileName);
+                //SOURCE_OUTPUT MyHome\setting\build\intermediates\library_assets\debug\out
+                FileObject resource = filer.createResource(StandardLocation.CLASS_OUTPUT, "navi", outFileName);
                 String resourcePath = resource.toUri().getPath();
                 messager.printMessage(Diagnostic.Kind.NOTE,"resourcePath:"+resourcePath);
 
                 String appPath = resourcePath.substring(0,resourcePath.indexOf("build"));
                 String assetPath = appPath + "src/main/assets";
+                messager.printMessage(Diagnostic.Kind.NOTE,"assetPath:"+assetPath);
 
                 File assetDir = new File(assetPath);
                 if(!assetDir.exists()){

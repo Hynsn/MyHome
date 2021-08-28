@@ -1,11 +1,11 @@
-package com.hynson.base
+package com.hynson.navi
 
 import java.lang.StringBuilder
 
 class Destination {
     var id = 0
-    var className: String? = null
-    var pageUrl: String? = null
+    lateinit var className: String
+    lateinit var pageUrl: String
     var asStarter = false
     var isFragment = false
 

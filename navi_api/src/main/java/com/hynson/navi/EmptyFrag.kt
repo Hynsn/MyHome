@@ -1,14 +1,13 @@
-package com.hynson.setting
+package com.hynson.navi
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.hynson.navi.FragmentDestination
+import android.widget.Button
 
-@FragmentDestination(pageUrl = "/setting/frag1", asStarter = false)
-class BlankFragment : Fragment() {
+class EmptyFrag : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -17,9 +16,7 @@ class BlankFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_blank1, container, false)
-
+        val view = inflater.inflate(R.layout.empty_frag, container, false)
         return view
     }
 }

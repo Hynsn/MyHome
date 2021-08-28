@@ -1,4 +1,4 @@
-package com.hynson.base
+package com.hynson.navi
 
 import android.annotation.SuppressLint
 import android.app.Application
