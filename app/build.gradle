@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
 }
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.rocketx'
 
 android {
     compileSdkVersion 30
@@ -31,12 +32,16 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    RocketX {
+        openLog = false
+    }
 }
 kapt {
     arguments {
         arg("MODULE_NAME", project.getName())
     }
 }
+
 
 dependencies {
     if (!isRunModule.toBoolean()) {
