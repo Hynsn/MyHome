@@ -9,6 +9,21 @@ class Destination {
     var asStarter = false
     var isFragment = false
 
+    constructor(
+        id: Int,
+        className: String,
+        pageUrl: String,
+        asStarter: Boolean,
+        isFragment: Boolean
+    ) {
+        this.id = id
+        this.className = className
+        this.pageUrl = pageUrl
+        this.asStarter = asStarter
+        this.isFragment = isFragment
+    }
+
+
     override fun toString(): String {
         val sb = StringBuilder()
         sb.append(javaClass.simpleName)

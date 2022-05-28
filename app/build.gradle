@@ -59,8 +59,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    implementation project(':navi_api')
     implementation project(':navi_annotation')
+    implementation project(':navi_api')
     kapt project(':navi_compiler')
 
     testImplementation 'junit:junit:4.+'

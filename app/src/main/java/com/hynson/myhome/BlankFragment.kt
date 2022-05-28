@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
-import com.hynson.navi.NavGraphBuilder
-import com.hynson.navi.FragmentDestination
+import androidx.navigation.Navigation
+import com.hynson.navi.annotation.NavDestination
+import com.hynson.navi.NavManager
+import com.hynson.navi.NaviPath
 
-@FragmentDestination(pageUrl = "ABCDEa123abc", asStarter = true)
+@NavDestination(pageUrl = NaviPath.APP_LAUNCH,resId = 2131231063)
 class BlankFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +29,11 @@ class BlankFragment : Fragment() {
             bundle.putString("test","测试使用")
             Navigation.findNavController(it)
                 .navigate(R.id.settingActivity,bundle)*/
-            com.hynson.navi.NavGraphBuilder.get().build("/setting/frag2")
-                .navigate()
+            /*NavGraphBuilder.get().build("/setting/frag2")
+                .navigate()*/
+
+            NavManager.instance.navigate(NaviPath.DEVICE_HOME,requireContext(), Navigation.findNavController(it))
+
         }
         return view
     }

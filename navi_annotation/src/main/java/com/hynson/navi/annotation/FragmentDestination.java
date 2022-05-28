@@ -1,4 +1,4 @@
-package com.hynson.navi;
+package com.hynson.navi.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;

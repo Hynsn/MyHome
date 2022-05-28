@@ -58,6 +58,7 @@ dependencies {
     api project(path: ':lib-base')
 
     implementation project(':navi_annotation')
+    implementation project(':navi_api')
     kapt project(':navi_compiler')
 
     testImplementation 'junit:junit:4.+'

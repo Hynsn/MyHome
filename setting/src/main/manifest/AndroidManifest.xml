@@ -3,5 +3,6 @@
     package="com.hynson.setting">
     <application>
         <activity android:name=".SettingActivity"/>
+        <activity android:name=".SettingsActivity"/>
     </application>
 </manifest>

@@ -27,7 +27,7 @@
         android:id="@+id/tv_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="这是设置页1"
+        android:text="这是设置页2"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

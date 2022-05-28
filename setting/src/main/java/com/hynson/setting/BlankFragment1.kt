@@ -5,14 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.navigation.Navigation
-import com.hynson.navi.NavManager
 import com.hynson.navi.NaviPath
 import com.hynson.navi.annotation.NavDestination
 
-@NavDestination(pageUrl = NaviPath.SETTING_FRAG1,resId = 2131230905)
-class BlankFragment : Fragment() {
+@NavDestination(pageUrl = NaviPath.SETTING_FRAG2,resId = 2131231146)
+class BlankFragment1 : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -22,10 +19,10 @@ class BlankFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_blank1, container, false)
-        view.findViewById<Button>(R.id.btn_next).setOnClickListener {
+        val view = inflater.inflate(R.layout.set_fragment_blank2, container, false)
+        /*view.findViewById<Button>(R.id.btn_next).setOnClickListener {
             NavManager.instance.navigate(NaviPath.SETTING_FRAG2,requireContext(), Navigation.findNavController(it))
-        }
+        }*/
         return view
     }
 }

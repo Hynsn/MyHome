@@ -4,6 +4,8 @@ import com.google.auto.service.AutoService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.hynson.navi.annotation.ActivityDestination;
+import com.hynson.navi.annotation.FragmentDestination;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,7 +38,7 @@ import static com.hynson.navi.Consts.KEY_MODULE_NAME;
 
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@SupportedAnnotationTypes({"com.hynson.navi.ActivityDestination","com.hynson.navi.FragmentDestination"})
+@SupportedAnnotationTypes({"com.hynson.navi.annotation.ActivityDestination","com.hynson.navi.annotation.FragmentDestination"})
 @SupportedOptions(KEY_MODULE_NAME)
 public class NavProcessor extends AbstractProcessor {
 
@@ -79,6 +81,8 @@ public class NavProcessor extends AbstractProcessor {
             Map<String, JsonObject> destMap = new HashMap<>();
             handleDestination(fragmentElement,FragmentDestination.class,destMap);
             handleDestination(activityElement,ActivityDestination.class,destMap);
+            messager.printMessage(Diagnostic.Kind.NOTE,"map:"+destMap.size());
+
             FileOutputStream fos = null;
             OutputStreamWriter writer = null;
             //将map转换为json文件，保存到app/src/asset中

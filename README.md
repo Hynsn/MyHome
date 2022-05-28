@@ -33,3 +33,13 @@ fragment类配置为destination -> fragment节点
 4.注解处理器能在navigation目录下自动生成xml文件？
 生成的xml文件id、xml节点内部的resid会不会和主工程资源Id冲突
 xml很不灵活。
+
+需求
+假定activity必须注册清单文件
+- activity跳转activity
+- activity跳转fragment：目标fragment存在当前activity中；目标fragment存在另外一个Activity中；目标fragment未放在activity中
+- fragment跳转fragment：存在同一个activity中；存在不同activity中
+- fragment跳转activity：存在同一个activity中；存在不同activity中
+
+实现效果：
+最终调用存在路由配置文件和跳转api调用

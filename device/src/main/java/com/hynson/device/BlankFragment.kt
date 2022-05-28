@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.hynson.navi.NavGraphBuilder
-import com.hynson.navi.FragmentDestination
+import androidx.navigation.Navigation
+import com.hynson.navi.annotation.NavDestination
+import com.hynson.navi.NavManager
+import com.hynson.navi.NaviPath
 
-@FragmentDestination(pageUrl = "/device/frag1", asStarter = false)
+@NavDestination(pageUrl = NaviPath.DEVICE_FRAG1,resId = 2131231064)
 class BlankFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +24,10 @@ class BlankFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_blank2, container, false)
         view.findViewById<Button>(R.id.btn_jump).setOnClickListener {
-            NavGraphBuilder.get().build("/setting/frag1")
-                .navigate()
+            /*NavGraphBuilder.get().build("/setting/frag1")
+                .navigate()*/
+            NavManager.instance.navigate(NaviPath.SETTING_FRAG1,requireContext(), Navigation.findNavController(it))
+
         }
         return view
     }
