@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.hynson.navi.NaviPath
 import com.hynson.navi.annotation.NavDestination
 
-@NavDestination(pageUrl = NaviPath.SETTING_FRAG2,resId = 2131231146)
+@NavDestination(pageUrl = NaviPath.SETTING_FRAG2)
 class BlankFragment1 : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

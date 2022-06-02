@@ -11,7 +11,7 @@ import com.hynson.navi.annotation.NavDestination
 import com.hynson.navi.NavManager
 import com.hynson.navi.NaviPath
 
-@NavDestination(pageUrl = NaviPath.DEVICE_FRAG1,resId = 2131231064)
+@NavDestination(pageUrl = NaviPath.DEVICE_FRAG1)
 class BlankFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,7 @@ class BlankFragment : Fragment() {
         view.findViewById<Button>(R.id.btn_jump).setOnClickListener {
             /*NavGraphBuilder.get().build("/setting/frag1")
                 .navigate()*/
-            NavManager.instance.navigate(NaviPath.SETTING_FRAG1,requireContext(), Navigation.findNavController(it))
+            NavManager.instance.navigate(NaviPath.SETTING_FRAG1)
 
         }
         return view

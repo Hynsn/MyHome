@@ -11,7 +11,7 @@ import com.hynson.navi.NavManager
 import com.hynson.navi.NaviPath
 import com.hynson.navi.annotation.NavDestination
 
-@NavDestination(pageUrl = NaviPath.SETTING_FRAG1,resId = 2131230905)
+@NavDestination(pageUrl = NaviPath.SETTING_FRAG1)
 class BlankFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,7 @@ class BlankFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_blank1, container, false)
         view.findViewById<Button>(R.id.btn_next).setOnClickListener {
-            NavManager.instance.navigate(NaviPath.SETTING_FRAG2,requireContext(), Navigation.findNavController(it))
+            NavManager.instance.navigate(NaviPath.SETTING_FRAG2)
         }
         return view
     }

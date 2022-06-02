@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
             .navigate()*/
         // 跳转fragment必须要指定controller，activity不必须。
 //        NavManager.instance.navigate(NaviPath.APP_LAUNCH,this)
-        NavManager.instance.navigate(NaviPath.APP_LAUNCH,this,navController)
+        NavManager.instance.navigate(NaviPath.APP_LAUNCH)
 //        NavManager.instance.navigate(NaviPath.DEVICE_HOME,this,navController)
 
 //        NavManager.instance.navigation("/setting/frag1",this)

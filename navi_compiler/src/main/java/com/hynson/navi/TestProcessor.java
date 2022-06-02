@@ -135,7 +135,7 @@ public class TestProcessor extends AbstractProcessor {
                 if (type != Destination1.Type.NONE) {
                     int id = Math.abs(className.hashCode());
                     Destination1 destBean = new Destination1.Builder()
-                            .setId(destination.resId())
+                            .setId(id)
                             .setElement(element)
                             .setPageUrl(destination.pageUrl())
                             .setClassName(className)

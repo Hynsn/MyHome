@@ -11,7 +11,7 @@ import com.hynson.navi.annotation.NavDestination
 import com.hynson.navi.NavManager
 import com.hynson.navi.NaviPath
 
-@NavDestination(pageUrl = NaviPath.APP_LAUNCH,resId = 2131231063)
+@NavDestination(pageUrl = NaviPath.APP_LAUNCH)
 class BlankFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +31,9 @@ class BlankFragment : Fragment() {
                 .navigate(R.id.settingActivity,bundle)*/
             /*NavGraphBuilder.get().build("/setting/frag2")
                 .navigate()*/
+//            NavManager.instance.navigate(NaviPath.DEVICE_FRAG1)
 
-            NavManager.instance.navigate(NaviPath.DEVICE_HOME,requireContext(), Navigation.findNavController(it))
+            NavManager.instance.navigate(NaviPath.DEVICE_HOME)
 
         }
         return view
