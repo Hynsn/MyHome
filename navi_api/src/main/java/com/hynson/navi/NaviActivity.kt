@@ -11,10 +11,12 @@ import com.blankj.utilcode.util.ActivityUtils
 class NaviActivity :FragmentActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i(TAG,"onCreate1")
         super.onCreate(savedInstanceState)
+        Log.i(TAG,"onCreate2")
         setContentView(R.layout.navi_main)
 
-/*        var target:String? = null
+        var target:String? = null
         intent.extras?.run {
             target = getString(NAVI_TARGET)
             Log.i(TAG,"target$target")
@@ -24,7 +26,7 @@ class NaviActivity :FragmentActivity(){
             val navController = findNavController(R.id.navi_main_fragment)
             Log.i(TAG,"navigate1: ${System.identityHashCode(this)},${System.identityHashCode(navController)}")
             NavManager.instance.handleGraph(it,this,navController)
-        }*/
+        }
 
     }
 
@@ -44,8 +46,8 @@ class NaviActivity :FragmentActivity(){
         fun launch(target: String,bundle: Bundle? = null){
             val context = ActivityUtils.getTopActivity();
             val intent: Intent = Intent(context,NaviActivity::class.java)
-/*            intent.putExtra(NAVI_TARGET,target)
-            intent.putExtra(NAVI_BUNDLE,bundle)*/
+            intent.putExtra(NAVI_TARGET,target)
+            intent.putExtra(NAVI_BUNDLE,bundle)
             context.startActivity(intent)
 //            ActivityUtils.startActivity(context,intent)
         }

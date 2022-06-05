@@ -40,13 +40,6 @@ class NavManager (
         }
     }
 
-    private fun getStartDest(navigator: FragmentNavigator): FragmentNavigator.Destination {
-        val fragDest = navigator.createDestination()
-        fragDest.id = R.id.empaty_activity
-        fragDest.className = EmptyFrag::class.qualifiedName.toString()
-        return fragDest
-    }
-
     fun navigate(
         target: String
     ): Object? {
@@ -204,8 +197,6 @@ class NavManager (
                         val navGraph = NavGraph(NavGraphNavigator(provider))
                         destMap.forEach {
 //                        Log.i(TAG,"${it.key} -> ${it.value}")
-                            val fragStart: FragmentNavigator.Destination = getStartDest(fragmentNavigator)
-                            navGraph.addDestination(fragStart)
                             val routerBean = it.value
                             if (routerBean.type == Destination1.Type.FRAGMENT) {
                                 val destination = fragmentNavigator.createDestination()
@@ -334,7 +325,7 @@ class NavManager (
     }
 
     override fun onActivityResumed(p0: Activity) {
-        Log.i(TAG,"${p0::class.java.simpleName},onActivityResumed")
+        Log.i(TAG,"${p0::class.java.simpleName},onActivityResumed:${System.identityHashCode(p0)}")
         printLikedList()
         while (linkedList.isNotEmpty()){
             val first = linkedList.pollFirst()
@@ -359,21 +350,21 @@ class NavManager (
     }
 
     override fun onActivityPaused(p0: Activity) {
-        Log.i(TAG,"${p0::class.java.simpleName},onActivityPaused")
+        Log.i(TAG,"${p0::class.java.simpleName},onActivityPaused:${System.identityHashCode(p0)}")
 
     }
 
     override fun onActivityStopped(p0: Activity) {
-        Log.i(TAG,"${p0::class.java.simpleName},onActivityStopped")
+        Log.i(TAG,"${p0::class.java.simpleName},onActivityStopped:${System.identityHashCode(p0)}")
 
     }
 
     override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
-        Log.i(TAG,"${p0::class.java.simpleName},onActivitySaveInstanceState")
+        Log.i(TAG,"${p0::class.java.simpleName},onActivitySaveInstanceState:${System.identityHashCode(p0)}")
     }
 
     override fun onActivityDestroyed(p0: Activity) {
-        Log.i(TAG,"${p0::class.java.simpleName},onActivityDestroyed")
+        Log.i(TAG,"${p0::class.java.simpleName},onActivityDestroyed:${System.identityHashCode(p0)}")
     }
 
     fun register(app: Application) {
