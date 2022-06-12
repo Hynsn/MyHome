@@ -11,10 +11,10 @@ import com.hynson.navi.NaviPath
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i(NaviActivity.TAG,"onCreate1")
+        Log.i(TAG,"onCreate1")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.i(NaviActivity.TAG,"onCreate2")
+        Log.i(TAG,"onCreate2")
 
         // 相当于初始化路由
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment1)

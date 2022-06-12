@@ -35,6 +35,10 @@ dependencies {
     api 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     api 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'com.blankj:utilcodex:1.31.0'
+    // 引入lifecycle
+    def lifecycle_version = '2.2.0'
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
     api 'com.google.code.gson:gson:2.8.6'
     implementation project(':navi_annotation')
