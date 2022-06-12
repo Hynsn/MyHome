@@ -43,3 +43,8 @@ xml很不灵活。
 
 实现效果：
 最终调用存在路由配置文件和跳转api调用
+
+2022/06/12
+路由框架思路重新整理
+- 方案1 所有路由配置合成一个路由表，Application初始化时初始化，然后在NaviActivity中配置。
+- 方案2 参照navigation现在使用逻辑，将路由资源文件使用apt替代。不同组件间跳转仅支持activity，由activity分管不同fragment、activity跳转，一个模块注解处理器会生成group类包含该模块不同的group（是指activity），group通过哈希表指定子路由表。需要支持不同组件相同group合并的情况，进而支持fragment跳转。
