@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -34,7 +32,6 @@ android {
 dependencies {
     api 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     api 'androidx.navigation:navigation-ui-ktx:2.3.5'
-    implementation 'com.blankj:utilcodex:1.31.0'
     // 引入lifecycle
     def lifecycle_version = '2.2.0'
     // ViewModel and LiveData
