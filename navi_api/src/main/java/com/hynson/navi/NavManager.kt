@@ -1,10 +1,10 @@
 package com.hynson.navi
 
 import android.app.Activity
-import android.app.Application
 import android.content.ComponentName
 import android.content.Context
-import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.util.Log
 import android.util.LruCache
 import androidx.navigation.ActivityNavigator
@@ -12,20 +12,15 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphNavigator
 import androidx.navigation.fragment.FragmentNavigator
-import com.blankj.utilcode.util.LogUtils
-import com.hynson.navi.bean.Destination1
+import com.hynson.navi.bean.Destination
 import java.util.*
 
 class NavManager(
     val lruCache: LruCache<String, ADestination?>,
     val groupCache: LruCache<String, Group<ADestination>?>
-) : Application.ActivityLifecycleCallbacks {
+) {
 
     private var lastController: NavController? = null
-    private var lastGroup: String? = null
-    var linkedList = LinkedList<String>()
-
-    private var navigateCounter = 0
 
     companion object {
         val TAG = NavManager::class.java.simpleName
@@ -39,7 +34,21 @@ class NavManager(
         }
     }
 
+    private val groupStack = Stack<GroupHandler>()
+
+    fun popGroup(group: String) {
+        if (groupStack.peek().name == group) {
+            groupStack.pop()
+        }
+    }
+
+    fun registHandler(group: String, context: Activity, handler: Handler): NavManager {
+        groupStack.push(GroupHandler(group, context, handler))
+        return this
+    }
+
     fun navigate(
+        context: Context,
         target: String
     ): Object? {
 
@@ -56,25 +65,22 @@ class NavManager(
             throw IllegalArgumentException("不按常理出牌 path乱搞的啊，正确写法：如 /order/Order_MainActivity")
         }
 
-        var group = finalGroup
-
         try {
             // TODO 第一步 读取路由组Group类文件
             val packageName = javaClass.`package`.name
-            val groupClassName = "${packageName}.$GROUP_FILE_NAME$group"
+            val groupClassName = "${packageName}.$GROUP_FILE_NAME$finalGroup"
 //                "com.hynson.navi" + "." + GROUP_FILE_NAME + group
             // TODO 第一步 读取路由组Group类文件
-            var loadGroup: Group<ADestination>? = groupCache.get(group)
+            var loadGroup: Group<ADestination>? = groupCache.get(finalGroup)
             if (null == loadGroup) { // 缓存里面没有东东
                 // 加载APT路由组Group类文件 例如：ARouter$$Group$$order
                 val aClass = Class.forName(groupClassName)
                 // 初始化类文件
-                loadGroup = aClass.newInstance() as Group<ADestination>
-
+                loadGroup = (aClass.newInstance() as Group<ADestination>)
                 // 保存到缓存
-                groupCache.put(group, loadGroup)
+                groupCache.put(finalGroup, loadGroup)
             }
-
+            Log.i(TAG, "本次加载的loadGroup:${loadGroup.getGroupMap()}")
             if (loadGroup.getGroupMap().isEmpty()) {
                 throw java.lang.RuntimeException("路由表Group报废了...") // Group这个类 加载失败
             }
@@ -84,7 +90,7 @@ class NavManager(
                 // 1.invoke loadGroup
                 // 2.Map<String, Class<? extends ARouterLoadPath>>
 
-                val clazz: Class<ADestination>? = loadGroup.getGroupMap()[group]
+                val clazz: Class<ADestination>? = loadGroup.getGroupMap()[finalGroup]
 //                    Class.forName(clazzName) as Class<out ADestination>
 
                 // 3.从map里面获取 ARouter$$Path$$personal.class
@@ -93,6 +99,7 @@ class NavManager(
                 // 保存到缓存
                 lruCache.put(path, loadPath)
             }
+            Log.i(TAG, "本次加载的getDestinationMap:${loadPath?.getDestinationMap()}")
             // 跳转
             if (loadPath != null) { // 健壮
                 val destMap = loadPath.getDestinationMap()
@@ -100,26 +107,40 @@ class NavManager(
                     throw RuntimeException("路由表Path报废了...")
                 } else {
                     // 最后才执行操作
-                    val routerBean: Destination1? = loadPath.getDestinationMap()[path]
+                    val routerBean: Destination? = loadPath.getDestinationMap()[path]
                     if (routerBean != null) {
-                        if (lastGroup == null) {
-                            NaviActivity.launch(routerBean.pageUrl)
-                            /*if(linkedList.isNotEmpty()){
-                                linkedList.clear()
-                            }*/
-                            linkedList.add(routerBean.pageUrl)
-                            lastGroup = group
-                        } else {
-                            // 还需要增加一种情况跳转
-//                            linkedList.add(routerBean.pageUrl)
-                            if (context != null && navController != null) {
-                                if (lastActivity) {
-                                    linkedList.add(routerBean.pageUrl)
-                                } else {
-                                    handleGraph(routerBean.pageUrl, context!!, navController!!)
+                        if (groupStack.isEmpty() || groupStack.peek().name != finalGroup
+                        ) { // 空和不是当前Group
+                            val ret = groupStack.find { it.name == finalGroup }
+                            if (ret == null) {
+                                NaviActivity.launch(context, finalGroup, routerBean.pageUrl)
+                            } else {
+                                val index = groupStack.search(ret)
+                                if (index > 0) {
+                                    val popCount = index - 1
+                                    if (popCount > 0) {
+                                        repeat(popCount) {
+                                            groupStack.pop().apply {
+                                                activity.finish()
+                                                handler = null
+                                            }
+                                        }
+                                    }
                                 }
-                                lastActivity = routerBean.type == Destination1.Type.ACTIVITY
+//                                val msg: Message = Message.obtain()
+//                                msg.what = 0
+//                                msg.obj = routerBean.pageUrl
+//                                msg.arg1 = routerBean.id
+//                                ret.handler.sendMessage(msg)
+                                Log.i(TAG, "$index 栈中已存在")
                             }
+                        } else {
+                            val msg: Message = Message.obtain()
+                            msg.what = 0
+                            msg.obj = routerBean.pageUrl
+                            msg.arg1 = routerBean.id
+                            groupStack.peek().handler?.sendMessage(msg)
+                            Log.i(TAG, "同Group:$finalGroup")
                         }
                     } else {
                         throw RuntimeException("找不到路由...")
@@ -133,10 +154,7 @@ class NavManager(
         return null
     }
 
-    private var lastActivity = false
-
     fun handleGraph(target: String, context: Context, navController: NavController) {
-        navigateCounter++
 
         var path = target
         if (target.isEmpty() || !target.startsWith("/")) {
@@ -206,7 +224,7 @@ class NavManager(
                         destMap.forEach {
 //                        Log.i(TAG,"${it.key} -> ${it.value}")
                             val routerBean = it.value
-                            if (routerBean.type == Destination1.Type.FRAGMENT) {
+                            if (routerBean.type == Destination.Type.FRAGMENT) {
                                 val destination = fragmentNavigator.createDestination()
                                 destination.id = routerBean.id
                                 destination.className = routerBean.className
@@ -225,12 +243,8 @@ class NavManager(
                                 destination.addDeepLink(routerBean.pageUrl)
                                 navGraph.addDestination(destination)
                             }
-                            Log.i(
-                                TAG,
-                                "navigateCounter:${navigateCounter} 无路由时存放Destination1:graph:${routerBean.pageUrl}.id:${routerBean.id}"
-                            )
                         }
-                        val targetBean: Destination1? = loadPath.getDestinationMap()[path]
+                        val targetBean: Destination? = loadPath.getDestinationMap()[path]
                         targetBean?.run {
                             if (navGraph.startDestination == 0) {
                                 navGraph.startDestination = id
@@ -243,7 +257,7 @@ class NavManager(
                             controller.graph = navGraph
                         }
                     } else {
-                        val targetBean: Destination1? = loadPath.getDestinationMap()[path]
+                        val targetBean: Destination? = loadPath.getDestinationMap()[path]
                         targetBean?.run {
                             if (controller.graph.startDestination != 0) {
                                 val provider = controller.navigatorProvider
@@ -251,11 +265,11 @@ class NavManager(
                                     provider.getNavigator(FragmentNavigator::class.java)
                                 val activityNavigator =
                                     provider.getNavigator(ActivityNavigator::class.java)
-                                var seamKey: Destination1? = null
+                                var seamKey: Destination? = null
                                 destMap.forEach {
                                     val routerBean = it.value
                                     if (routerBean.id != id) {
-                                        if (routerBean.type == Destination1.Type.FRAGMENT) {
+                                        if (routerBean.type == Destination.Type.FRAGMENT) {
                                             val destination = fragmentNavigator.createDestination()
                                             destination.id = routerBean.id
                                             destination.className = routerBean.className
@@ -273,16 +287,12 @@ class NavManager(
                                             destination.addDeepLink(routerBean.pageUrl)
                                             controller.graph.addDestination(destination)
                                         }
-                                        Log.i(
-                                            TAG,
-                                            "navigateCounter:${navigateCounter} 放前面的的Destination1:graph:${routerBean.pageUrl}.id:${routerBean.id}"
-                                        )
                                     } else {
                                         seamKey = it.value
                                     }
                                 }
                                 seamKey?.run {
-                                    if (type == Destination1.Type.FRAGMENT) {
+                                    if (type == Destination.Type.FRAGMENT) {
                                         val destination = fragmentNavigator.createDestination()
                                         destination.id = id
                                         destination.className = className
@@ -300,16 +310,6 @@ class NavManager(
                                         destination.addDeepLink(pageUrl)
                                         controller.graph.addDestination(destination)
                                     }
-                                    Log.i(
-                                        TAG,
-                                        "navigateCounter:${navigateCounter} 放在最后的Destination1:graph:${pageUrl}.id:${id}"
-                                    )
-                                }
-                                controller.graph.forEach {
-                                    Log.i(
-                                        TAG,
-                                        "navigateCounter:${navigateCounter} graph:${it.id}${it.navigatorName}.id:${id}"
-                                    )
                                 }
                                 controller.navigate(id)
                             }
@@ -329,7 +329,7 @@ class NavManager(
 
                 }
                 // 最后才执行操作
-                val routerBean: Destination1? = loadPath.getDestinationMap()[path]
+                val routerBean: Destination? = loadPath.getDestinationMap()[path]
                 if (routerBean != null) {
                     Log.i(
                         TAG,
@@ -342,75 +342,6 @@ class NavManager(
         } catch (e: Exception) {
             e.printStackTrace();
         }
-    }
-
-    override fun onActivityCreated(p0: Activity, p1: Bundle?) {
-        Log.i(TAG, "${p0::class.java.simpleName},onActivityCreated:${System.identityHashCode(p0)}")
-
-    }
-
-    override fun onActivityStarted(p0: Activity) {
-        Log.i(TAG, "${p0::class.java.simpleName},onActivityStarted:${System.identityHashCode(p0)}")
-    }
-
-    override fun onActivityResumed(p0: Activity) {
-        Log.i(TAG, "${p0::class.java.simpleName},onActivityResumed:${System.identityHashCode(p0)}")
-        if (p0 !is NaviActivity) {
-            if (context != null && navController != null) {
-                nagivateLast(context!!, navController!!)
-            }
-        }
-    }
-
-    private var context: Context? = null
-    private var navController: NavController? = null
-
-    fun nagivateLast(context: Context, navController: NavController) {
-        this.context = context
-        this.navController = navController
-        if (linkedList.isNotEmpty()) {
-            val first = linkedList.pollFirst()
-            handleGraph(first, context, navController)
-        }
-    }
-
-    fun printLikedList() {
-        if (linkedList.isNotEmpty()) {
-            Log.i(TAG, "printLikedList")
-            linkedList.forEachIndexed { index, s ->
-                Log.i(TAG, "$index,$s")
-            }
-        }
-    }
-
-    override fun onActivityPaused(p0: Activity) {
-        Log.i(TAG, "${p0::class.java.simpleName},onActivityPaused:${System.identityHashCode(p0)}")
-
-    }
-
-    override fun onActivityStopped(p0: Activity) {
-        Log.i(TAG, "${p0::class.java.simpleName},onActivityStopped:${System.identityHashCode(p0)}")
-
-    }
-
-    override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
-        Log.i(
-            TAG,
-            "${p0::class.java.simpleName},onActivitySaveInstanceState:${System.identityHashCode(p0)}"
-        )
-    }
-
-    override fun onActivityDestroyed(p0: Activity) {
-        Log.i(
-            TAG,
-            "${p0::class.java.simpleName},onActivityDestroyed:${System.identityHashCode(p0)}"
-        )
-    }
-
-    fun register(app: Application) {
-        app.registerActivityLifecycleCallbacks(this)
-        LogUtils.getConfig().isLogSwitch = true
-
     }
 
     //    fun with(String) : Builder {

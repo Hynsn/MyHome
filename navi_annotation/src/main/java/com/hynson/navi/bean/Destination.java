@@ -1,7 +1,7 @@
 package com.hynson.navi.bean;
 import javax.lang.model.element.Element;
 
-public class Destination1 {
+public class Destination {
     public enum Type {
         ACTIVITY,
         FRAGMENT,
@@ -16,7 +16,7 @@ public class Destination1 {
     public String pageUrl;
     public String group;
 
-    public Destination1(Type type, Class<?> clazz, String className, int id, String pageUrl) {
+    public Destination(Type type, Class<?> clazz, String className, int id, String pageUrl) {
         this.type = type;
         this.mClass = clazz;
         this.className = className;
@@ -24,7 +24,7 @@ public class Destination1 {
         this.pageUrl = pageUrl;
     }
 
-    private Destination1(Builder builder){
+    private Destination(Builder builder){
         this.type = builder.type;
         this.className = builder.className;
         this.element = builder.element;
@@ -65,11 +65,11 @@ public class Destination1 {
             return this;
         }
 
-        public Destination1 build(){
+        public Destination build(){
             if(pageUrl == null || pageUrl.length() == 0){
                 throw new IllegalArgumentException("pageUrl必填，如:/app/login");
             }
-            return new Destination1(this);
+            return new Destination(this);
         }
     }
 

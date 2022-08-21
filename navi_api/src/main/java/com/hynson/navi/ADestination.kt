@@ -1,7 +1,7 @@
 package com.hynson.navi
 
-import com.hynson.navi.bean.Destination1
+import com.hynson.navi.bean.Destination
 
 interface ADestination {
-    fun getDestinationMap(): Map<String, Destination1>
+    fun getDestinationMap(): Map<String, Destination>
 }

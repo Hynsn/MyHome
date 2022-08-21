@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import com.hynson.navi.NavManager
 import com.hynson.navi.NaviPath
 import com.hynson.navi.annotation.NavDestination
 
@@ -20,9 +22,9 @@ class BlankFragment1 : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.set_fragment_blank2, container, false)
-        /*view.findViewById<Button>(R.id.btn_next).setOnClickListener {
-            NavManager.instance.navigate(NaviPath.SETTING_FRAG2,requireContext(), Navigation.findNavController(it))
-        }*/
+        view.findViewById<Button>(R.id.btn_back).setOnClickListener {
+            NavManager.instance.navigate(requireContext(),NaviPath.DEVICE_HOME)
+        }
         return view
     }
 }

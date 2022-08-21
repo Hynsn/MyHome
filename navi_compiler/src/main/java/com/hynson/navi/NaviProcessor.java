@@ -4,7 +4,7 @@ import static com.hynson.navi.Consts.KEY_MODULE_NAME;
 import static com.hynson.navi.Consts.ROOT_PAKCAGE;
 
 import com.google.auto.service.AutoService;
-import com.hynson.navi.bean.Destination1;
+import com.hynson.navi.bean.Destination;
 import com.hynson.navi.annotation.NavDestination;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -46,7 +46,7 @@ import javax.tools.Diagnostic;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({"com.hynson.navi.annotation.NavDestination"})
 @SupportedOptions(KEY_MODULE_NAME)
-public class TestProcessor extends AbstractProcessor {
+public class NaviProcessor extends AbstractProcessor {
     private Messager messager;
     private Filer filer;
     // 操作Element的工具类（类，函数，属性，其实都是Element）
@@ -55,7 +55,7 @@ public class TestProcessor extends AbstractProcessor {
     private Types typeTool;
 
     private String moduleName;
-    private Map<String, List<Destination1>> destMap = new HashMap<>(); // 目前是一个
+    private Map<String, List<Destination>> destMap = new HashMap<>(); // 目前是一个
 
     // Map<"personal", "ARouter$$Path$$personal.class">
     private Map<String, String> mAllGroupMap = new HashMap<>();
@@ -98,7 +98,7 @@ public class TestProcessor extends AbstractProcessor {
             TypeName methodReturn = ParameterizedTypeName.get(
                     ClassName.get(Map.class),         // Map
                     ClassName.get(String.class),      // Map<String,
-                    ClassName.get(Destination1.class)   // Map<String, RouterBean>
+                    ClassName.get(Destination.class)   // Map<String, RouterBean>
             );
             MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(Consts.ADESTINATION_GETDESTINATION)
                     .addAnnotation(Override.class)
@@ -107,7 +107,7 @@ public class TestProcessor extends AbstractProcessor {
             methodBuilder.addStatement("$T<$T, $T> $N = new $T<>()",
                     ClassName.get(Map.class),           // Map
                     ClassName.get(String.class),        // Map<String,
-                    ClassName.get(Destination1.class),    // Map<String, RouterBean>
+                    ClassName.get(Destination.class),    // Map<String, RouterBean>
                     Consts.ADESTINATION_GETDESTINATION_VAR1,          // Map<String, RouterBean> pathMap
                     ClassName.get(HashMap.class)        // Map<String, RouterBean> pathMap = new HashMap<>();
             );
@@ -125,16 +125,16 @@ public class TestProcessor extends AbstractProcessor {
                 NavDestination destination = element.getAnnotation(NavDestination.class);
                 //获取全类名
                 String className = ((TypeElement) element).getQualifiedName().toString();
-                Destination1.Type type = Destination1.Type.NONE;
+                Destination.Type type = Destination.Type.NONE;
                 if (typeTool.isSubtype(element.asType(), activityMirror)) {
-                    type = Destination1.Type.ACTIVITY;
+                    type = Destination.Type.ACTIVITY;
                 } else if (typeTool.isSubtype(element.asType(), fragmentMirror)) {
-                    type = Destination1.Type.FRAGMENT;
+                    type = Destination.Type.FRAGMENT;
                 }
 
-                if (type != Destination1.Type.NONE) {
+                if (type != Destination.Type.NONE) {
                     int id = Math.abs(className.hashCode());
-                    Destination1 destBean = new Destination1.Builder()
+                    Destination destBean = new Destination.Builder()
                             .setId(id)
                             .setElement(element)
                             .setPageUrl(destination.pageUrl())
@@ -145,8 +145,8 @@ public class TestProcessor extends AbstractProcessor {
                     methodBuilder.addStatement("$N.put($S, new $T($T.$L,$T.class,$S,$L,$S))",
                             Consts.ADESTINATION_GETDESTINATION_VAR1,
                             destBean.pageUrl,
-                            ClassName.get(Destination1.class),
-                            ClassName.get(Destination1.Type.class),
+                            ClassName.get(Destination.class),
+                            ClassName.get(Destination.Type.class),
                             destBean.type,
                             ClassName.get((TypeElement) destBean.element),
                             destBean.className,
@@ -157,7 +157,7 @@ public class TestProcessor extends AbstractProcessor {
                     if (checkRouterPath(destBean)) {
                         messager.printMessage(Diagnostic.Kind.NOTE, "RouterBean Check Success:" + destBean.toString());
                         // 赋值 mAllPathMap 集合里面去
-                        List<Destination1> routerBeans = destMap.get(destBean.group);
+                        List<Destination> routerBeans = destMap.get(destBean.group);
 
                         // 如果从Map中找不到key为：bean.getGroup()的数据，就新建List集合再添加进Map
                         if (Utils.isEmpty(routerBeans)) { // 仓库一 没有东西
@@ -193,7 +193,7 @@ public class TestProcessor extends AbstractProcessor {
 
             JavaFile jFile = JavaFile.builder(ROOT_PAKCAGE, clazz)
                     .build();
-            for (Map.Entry<String, List<Destination1>> entry : destMap.entrySet()) {
+            for (Map.Entry<String, List<Destination>> entry : destMap.entrySet()) {
                 mAllGroupMap.put(entry.getKey(), className);
             }
             try {
@@ -276,7 +276,7 @@ public class TestProcessor extends AbstractProcessor {
                 .build() // JavaFile构建完成
                 .writeTo(filer); // 文件生成器开始生成类文件
     }
-    private final boolean checkRouterPath(Destination1 bean) {
+    private final boolean checkRouterPath(Destination bean) {
         String group = bean.group; //  同学们，一定要记住： "app"   "order"   "personal"
         String path = bean.pageUrl;   //  同学们，一定要记住： "/app/MainActivity"   "/order/Order_MainActivity"   "/personal/Personal_MainActivity"
 

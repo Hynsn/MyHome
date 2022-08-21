@@ -26,7 +26,7 @@ class BlankFragment : Fragment() {
         view.findViewById<Button>(R.id.btn_jump).setOnClickListener {
             /*NavGraphBuilder.get().build("/setting/frag1")
                 .navigate()*/
-            NavManager.instance.navigate(NaviPath.SETTING_FRAG1)
+            NavManager.instance.navigate(requireContext(),NaviPath.SETTING_FRAG1)
 
         }
         return view

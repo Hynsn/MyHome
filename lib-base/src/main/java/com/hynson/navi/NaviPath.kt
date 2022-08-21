@@ -1,7 +1,7 @@
 package com.hynson.navi
 
 class NaviPath {
-    companion object{
+    companion object {
         private const val GROUP_APP = "/app/"
 
         const val APP_LAUNCH = "${GROUP_APP}launch"

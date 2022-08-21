@@ -24,7 +24,10 @@ class BlankFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_blank1, container, false)
         view.findViewById<Button>(R.id.btn_next).setOnClickListener {
-            NavManager.instance.navigate(NaviPath.SETTING_FRAG2)
+            NavManager.instance.navigate(requireContext(),NaviPath.SETTING_FRAG2)
+        }
+        view.findViewById<Button>(R.id.btn_back).setOnClickListener {
+            NavManager.instance.navigate(requireContext(),NaviPath.DEVICE_HOME)
         }
         return view
     }
